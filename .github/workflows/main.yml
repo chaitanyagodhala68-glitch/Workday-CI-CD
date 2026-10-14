@@ -1,50 +1,75 @@
 name: Deploy App
+
 on:
   push:
     branches:
       - Main_v1
+
 env:
   WDCLI_CLIENT_ID: ${{ secrets.WDCLI_CLIENT_ID }}
   WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
   WDCLI_TENANT_CLIENT_ID: ${{ secrets.WDCLI_TENANT_CLIENT_ID }}
   WDCLI_TENANT_CLIENT_SECRET: ${{ secrets.WDCLI_TENANT_CLIENT_SECRET }}
-  WDCLI_TENANT_ALIAS: IMPLEMENTATION # TODO updat
-  WDCLI_APP_REFERENCE_ID: learningEnrollmentsInboundZtnmytq_1_zgjwvs 
+  WDCLI_TENANT_ALIAS: elara4
+  WDCLI_APP_REFERENCE_ID: learningEnrollmentsInboundZtnmytq_1_zgjwvs
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Extract and setup wdcli
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Extract and Setup WDCLI
         run: |
-          tar -xzf wdcli-installer-linux-x64-v1.9.43.tar.gz # TODO ensure you include the WDCLI package in your git repo's root folder, and update this line to match the filename
+          tar -xzf wdcli-installer-linux-x64-v1.9.43.tar.gz
           echo "$PWD/wdcli/bin" >> $GITHUB_PATH
-      - name: Authenticate with system user
-        run: wdcli auth login --system-user
-      - name: Upload app
-        run: wdcli app upload $WDCLI_APP_REFERENCE_ID --ci
-      - name: Promote app to Implementation
+
+      - name: Verify WDCLI Installation
         run: |
-         wdcli app promote "$WDCLI_APP_REFERENCE_ID" \
-           --latest-version \
-           --target-promotion-level implementation \
-           --ci
-      - name: Get tenant access token
+          wdcli --version
+
+      - name: Authenticate with System User
+        run: |
+          wdcli auth login --system-user
+
+      - name: Upload App
+        run: |
+          wdcli app upload $WDCLI_APP_REFERENCE_ID --ci
+
+      - name: Promote App to Production
+        run: |
+          wdcli app promote $WDCLI_APP_REFERENCE_ID \
+            --latest-version \
+            --target-promotion-level implementation \
+            --release-notes "Automated deployment from GitHub Actions" \
+            --ci
+
+      - name: Get Tenant Access Token
         id: token
         run: |
           CREDENTIALS=$(printf '%s' "$WDCLI_TENANT_CLIENT_ID:$WDCLI_TENANT_CLIENT_SECRET" | base64 | tr -d '\n')
-          
+
           RESPONSE=$(curl --fail-with-body -sS -X POST https://auth.api.workday.com/v1/token \
             -H "Authorization: Basic $CREDENTIALS" \
             -H "Content-Type: application/x-www-form-urlencoded" \
             -d "grant_type=client_credentials&tenant_alias=$WDCLI_TENANT_ALIAS")
+
           echo "$RESPONSE"
-          
+
           ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
+
           echo "access_token=$ACCESS_TOKEN" >> $GITHUB_OUTPUT
-      - name: Set tenant access token in config
+
+      - name: Set Tenant Access Token in Config
         run: |
           wdcli config set defaultTenantAlias $WDCLI_TENANT_ALIAS
           wdcli config set wcpTenantAccessToken ${{ steps.token.outputs.access_token }}
-      - name: Deploy app
-        run: wdcli app deploy $WDCLI_APP_REFERENCE_ID --latest-version --ci -t $WDCLI_TENANT_ALIAS
+
+      - name: Deploy App
+        run: |
+          wdcli app deploy $WDCLI_APP_REFERENCE_ID \
+            --latest-version \
+            --ci \
+            -t $WDCLI_TENANT_ALIAS
