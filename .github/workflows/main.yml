@@ -2,7 +2,7 @@ name: Deploy App
 on:
   push:
     branches:
-      - main
+      - Main_v1
 env:
   WDCLI_CLIENT_ID: ${{ secrets.WDCLI_CLIENT_ID }}
   WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
