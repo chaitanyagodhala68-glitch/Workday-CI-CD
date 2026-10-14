@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Extract and setup wdcli
         run: |
-          tar -xzf wdcli-installer-linux-x64-v1.7.25.tar.gz # TODO ensure you include the WDCLI package in your git repo's root folder, and update this line to match the filename
+          tar -xzf wdcli-installer-linux-x64-v1.9.43.tar.gz # TODO ensure you include the WDCLI package in your git repo's root folder, and update this line to match the filename
           echo "$PWD/wdcli/bin" >> $GITHUB_PATH
       - name: Authenticate with system user
         run: wdcli auth login --system-user
