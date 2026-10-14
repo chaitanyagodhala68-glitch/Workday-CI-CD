@@ -8,7 +8,7 @@ env:
   WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
   WDCLI_TENANT_CLIENT_ID: ${{ secrets.WDCLI_TENANT_CLIENT_ID }}
   WDCLI_TENANT_CLIENT_SECRET: ${{ secrets.WDCLI_TENANT_CLIENT_SECRET }}
-  WDCLI_TENANT_ALIAS: elara4 # TODO updat
+  WDCLI_TENANT_ALIAS: IMPLEMENTATION # TODO updat
   WDCLI_APP_REFERENCE_ID: learningEnrollmentsInboundZtnmytq_1_zgjwvs 
 jobs:
   deploy:
