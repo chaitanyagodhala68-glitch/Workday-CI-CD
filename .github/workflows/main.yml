@@ -28,7 +28,7 @@ jobs:
 
       - name: Verify WDCLI Installation
         run: |
-          wdcli --version
+       wdcli version
 
       - name: Authenticate with System User
         run: |
