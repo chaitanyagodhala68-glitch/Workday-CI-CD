@@ -26,13 +26,14 @@ jobs:
           tar -xzf wdcli-installer-linux-x64-v1.9.43.tar.gz
           echo "$PWD/wdcli/bin" >> $GITHUB_PATH
 
+    
+      - name: Authenticate with System User
+        run: |
+          wdcli auth login --system-user
       - name: Verify WDCLI Installation
         run: |
           wdcli version
           wdcli tenant list
-      - name: Authenticate with System User
-        run: |
-          wdcli auth login --system-user
 
       - name: Upload App
         run: |
