@@ -23,6 +23,12 @@ jobs:
         run: wdcli auth login --system-user
       - name: Upload app
         run: wdcli app upload $WDCLI_APP_REFERENCE_ID --ci
+      - name: Promote app to Implementation
+       run: |
+         wdcli app promote "$WDCLI_APP_REFERENCE_ID" \
+           --latest-version \
+           --target-promotion-level implementation \
+           --ci
       - name: Get tenant access token
         id: token
         run: |
