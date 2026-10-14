@@ -8,7 +8,7 @@ env:
   WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
   WDCLI_TENANT_CLIENT_ID: ${{ secrets.WDCLI_TENANT_CLIENT_ID }}
   WDCLI_TENANT_CLIENT_SECRET: ${{ secrets.WDCLI_TENANT_CLIENT_SECRET }}
-  WDCLI_TENANT_ALIAS: orgname_wcpdev1 # TODO update
+  WDCLI_TENANT_ALIAS: elara4 # TODO update
   WDCLI_APP_REFERENCE_ID: PG_testApp_xxxxxx # TODO update
 jobs:
   deploy:
