@@ -24,7 +24,7 @@ jobs:
       - name: Upload app
         run: wdcli app upload $WDCLI_APP_REFERENCE_ID --ci
       - name: Promote app to Implementation
-       run: |
+        run: |
          wdcli app promote "$WDCLI_APP_REFERENCE_ID" \
            --latest-version \
            --target-promotion-level implementation \
